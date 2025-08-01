@@ -13,13 +13,16 @@ import {
   Building,
   CheckCircle,
 } from 'lucide-react';
+import Image1 from '/image1.jpg';
+import Image2 from '/image2.jpg';
+import Image3 from '/image3.jpg';
 
-// Components
 import StatsSection from '../components/common/StatsSection';
 import AnimatedCTA from '../components/common/AnimatedCTA';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const slides = [
     {
@@ -29,8 +32,7 @@ const Home = () => {
       quote:
         'Excellence is never an accident. It is always the result of high intention, sincere effort, and intelligent execution.',
       author: 'Aristotle',
-      image:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      image: Image1,
     },
     {
       title: 'Your Strategic Legal Partner',
@@ -39,8 +41,7 @@ const Home = () => {
       quote:
         'The good lawyer is not the man who has an eye to every side and angle of contingency, but who throws himself on your part so heartily, that he can get you out of a scrape.',
       author: 'Ralph Waldo Emerson',
-      image:
-        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      image: Image2,
     },
     {
       title: 'Protecting Your Digital Future',
@@ -49,17 +50,27 @@ const Home = () => {
       quote:
         'In matters of style, swim with the current; in matters of principle, stand like a rock.',
       author: 'Thomas Jefferson',
-      image:
-        'https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      image: Image3,
     },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      if (!isTransitioning) {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+      }
     }, 6000);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [slides.length, isTransitioning]);
+
+  const handleSlideChange = (newSlide) => {
+    if (isTransitioning || newSlide === currentSlide) return;
+
+    setIsTransitioning(true);
+    setCurrentSlide(newSlide);
+
+    setTimeout(() => setIsTransitioning(false), 1000);
+  };
 
   const slideVariants = {
     enter: { opacity: 0, x: 100 },
@@ -75,7 +86,10 @@ const Home = () => {
     >
       {/* Hero Section */}
       <section className="relative h-screen overflow-hidden">
-        <AnimatePresence mode="wait">
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => setIsTransitioning(false)}
+        >
           <motion.div
             key={currentSlide}
             variants={slideVariants}
@@ -83,7 +97,7 @@ const Home = () => {
             animate="center"
             exit="exit"
             transition={{ duration: 1, ease: 'easeInOut' }}
-            className="absolute inset-0"
+            className="absolute inset-0 z-0"
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -94,57 +108,71 @@ const Home = () => {
         </AnimatePresence>
 
         <div className="relative z-10 h-full flex items-center">
-          <div className="container mx-auto px-6">
-            <div className="max-w-5xl">
-              <motion.h1
-                key={currentSlide}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight"
-              >
-                {slides[currentSlide].title}
-              </motion.h1>
-              <motion.p
-                key={currentSlide}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="text-2xl text-[#EAEFEF] mb-8 max-w-3xl leading-relaxed"
-              >
-                {slides[currentSlide].subtitle}
-              </motion.p>
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-3xl sm:max-w-4xl md:max-w-5xl">
+              {/* Title */}
+              <AnimatePresence mode="wait">
+                <motion.h1
+                  key={`title-${currentSlide}`}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -50 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight"
+                >
+                  {slides[currentSlide].title}
+                </motion.h1>
+              </AnimatePresence>
 
-              <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className="border-l-4 border-[#B8CFCE] pl-8 mb-12 max-w-4xl"
-              >
-                <Quote className="w-10 h-10 text-[#B8CFCE] mb-4" />
-                <blockquote className="text-xl italic text-[#B8CFCE] mb-3 leading-relaxed">
-                  "{slides[currentSlide].quote}"
-                </blockquote>
-                <cite className="text-[#7F8CAA] font-semibold text-lg">
-                  — {slides[currentSlide].author}
-                </cite>
-              </motion.div>
+              {/* Subtitle */}
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={`subtitle-${currentSlide}`}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-lg md:text-xl text-[#EAEFEF] mb-6 max-w-2xl leading-relaxed"
+                >
+                  {slides[currentSlide].subtitle}
+                </motion.p>
+              </AnimatePresence>
 
+              {/* Quote */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`quote-${currentSlide}`}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.5 }}
+                  className="border-l-4 border-[#B8CFCE] pl-6 sm:pl-8 mb-10 max-w-3xl"
+                >
+                  <Quote className="w-6 h-6 text-[#B8CFCE] mb-3" />
+                  <blockquote className="text-base md:text-lg italic text-[#B8CFCE] mb-2 leading-relaxed">
+                    "{slides[currentSlide].quote}"
+                  </blockquote>
+                  <cite className="text-[#7F8CAA] font-semibold text-sm md:text-base">
+                    — {slides[currentSlide].author}
+                  </cite>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 }}
-                className="flex flex-col sm:flex-row gap-6"
+                transition={{ delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4 sm:gap-6"
               >
                 <Link to="/contact">
                   <motion.button
                     whileHover={{ scale: 1.05, backgroundColor: '#B8CFCE' }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-[#7F8CAA] text-white px-10 py-5 rounded-lg font-bold text-lg flex items-center justify-center space-x-3 transition-all hover:shadow-2xl"
+                    className="bg-[#7F8CAA] text-white px-6 py-3 sm:px-10 sm:py-5 rounded-lg font-bold text-base sm:text-lg flex items-center justify-center space-x-2"
                   >
                     <span>Get Legal Consultation</span>
-                    <ArrowRight className="w-6 h-6" />
+                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.button>
                 </Link>
                 <Link to="/services">
@@ -154,7 +182,7 @@ const Home = () => {
                       backgroundColor: 'rgba(255,255,255,0.1)',
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="border-2 border-[#EAEFEF] text-[#EAEFEF] px-10 py-5 rounded-lg font-bold text-lg hover:bg-white/10 transition-all"
+                    className="border-2 border-[#EAEFEF] text-[#EAEFEF] px-6 py-3 sm:px-10 sm:py-5 rounded-lg font-bold text-base sm:text-lg hover:bg-white/10"
                   >
                     Explore Our Services
                   </motion.button>
@@ -164,38 +192,42 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Slide Controls */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3">
+        {/* Slide Dots */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3">
           {slides.map((_, index) => (
             <motion.button
               key={index}
               whileHover={{ scale: 1.3 }}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-4 h-4 rounded-full transition-all ${
-                index === currentSlide ? 'bg-[#B8CFCE]' : 'bg-white/50'
-              }`}
+              onClick={() => handleSlideChange(index)}
+              disabled={isTransitioning}
+              className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all ${
+                index === currentSlide ? 'bg-[#BBBBBB]' : 'bg-white/50'
+              } ${isTransitioning ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             />
           ))}
         </div>
 
+        {/* Arrows */}
         <motion.button
           whileHover={{ scale: 1.1, x: -5 }}
           onClick={() =>
-            setCurrentSlide(
-              (prev) => (prev - 1 + slides.length) % slides.length
+            handleSlideChange(
+              (currentSlide - 1 + slides.length) % slides.length
             )
           }
-          className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-4 rounded-full text-white hover:bg-white/30 transition-all"
+          disabled={isTransitioning}
+          className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-3 sm:p-4 rounded-full text-white hover:bg-white/30 z-20 disabled:opacity-50"
         >
-          <ChevronLeft className="w-8 h-8" />
+          <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
         </motion.button>
 
         <motion.button
           whileHover={{ scale: 1.1, x: 5 }}
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
-          className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-4 rounded-full text-white hover:bg-white/30 transition-all"
+          onClick={() => handleSlideChange((currentSlide + 1) % slides.length)}
+          disabled={isTransitioning}
+          className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-3 sm:p-4 rounded-full text-white hover:bg-white/30 z-20 disabled:opacity-50"
         >
-          <ChevronRight className="w-8 h-8" />
+          <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
         </motion.button>
       </section>
 
@@ -228,7 +260,7 @@ const Home = () => {
               <div className="flex items-center mb-6">
                 <Target className="w-12 h-12 text-[#B8CFCE] mr-4" />
                 <h3 className="text-3xl font-bold text-[#B8CFCE]">
-                  👌 Our Mission
+                  Our Mission
                 </h3>
               </div>
               <p className="text-lg leading-relaxed text-[#EAEFEF]">
@@ -248,7 +280,7 @@ const Home = () => {
               <div className="flex items-center mb-6">
                 <Eye className="w-12 h-12 text-[#B8CFCE] mr-4" />
                 <h3 className="text-3xl font-bold text-[#B8CFCE]">
-                  👌 Our Vision
+                  Our Vision
                 </h3>
               </div>
               <p className="text-lg leading-relaxed text-[#EAEFEF]">

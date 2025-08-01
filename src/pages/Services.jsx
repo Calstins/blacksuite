@@ -14,7 +14,6 @@ import {
   MessageSquare,
 } from 'lucide-react';
 
-// Components
 import PageTitleHero from '../components/common/PageTitleHero';
 import AnimatedCTA from '../components/common/AnimatedCTA';
 

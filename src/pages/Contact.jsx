@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import {
   Phone,
   Mail,
@@ -9,6 +10,9 @@ import {
   AlertTriangle,
   ExternalLink,
   Car,
+  CheckCircle,
+  XCircle,
+  Loader,
 } from 'lucide-react';
 
 // Components
@@ -25,21 +29,119 @@ const Contact = () => {
     message: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+
+  // EmailJS configuration - Replace with your actual values
+  const EMAILJS_SERVICE_ID = 'your_service_id';
+  const EMAILJS_TEMPLATE_ID = 'your_template_id';
+  const EMAILJS_PUBLIC_KEY = 'your_public_key';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // EmailJS integration would go here
-    alert(
-      'Thank you for your message! We will get back to you within 24 hours.'
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Prepare template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company || 'Not specified',
+        phone: formData.phone || 'Not provided',
+        service: formData.service,
+        urgency: formData.urgency || 'Not specified',
+        message: formData.message,
+        to_name: 'BlackSuit Solicitors Team',
+        reply_to: formData.email,
+        submission_date: new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      };
+
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('Email sent successfully:', result);
+      setSubmitStatus('success');
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        service: '',
+        urgency: '',
+        message: '',
+      });
+
+      // Auto-hide success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      setSubmitStatus('error');
+
+      // Auto-hide error message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  // Status message component
+  const StatusMessage = () => {
+    if (!submitStatus) return null;
+
+    const isSuccess = submitStatus === 'success';
+    const Icon = isSuccess ? CheckCircle : XCircle;
+    const bgColor = isSuccess ? 'bg-green-50' : 'bg-red-50';
+    const textColor = isSuccess ? 'text-green-800' : 'text-red-800';
+    const iconColor = isSuccess ? 'text-green-500' : 'text-red-500';
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        className={`${bgColor} border ${
+          isSuccess ? 'border-green-200' : 'border-red-200'
+        } rounded-lg p-4 mb-6`}
+      >
+        <div className="flex items-center">
+          <Icon className={`w-5 h-5 ${iconColor} mr-3`} />
+          <div className={textColor}>
+            <p className="font-semibold">
+              {isSuccess
+                ? 'Message Sent Successfully!'
+                : 'Failed to Send Message'}
+            </p>
+            <p className="text-sm">
+              {isSuccess
+                ? "Thank you for contacting us. We'll respond within 24 hours."
+                : 'Please try again or contact us directly via phone or email.'}
+            </p>
+          </div>
+        </div>
+      </motion.div>
     );
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      phone: '',
-      service: '',
-      urgency: '',
-      message: '',
-    });
   };
 
   return (
@@ -70,6 +172,9 @@ const Contact = () => {
               <h2 className="text-3xl font-bold text-[#333446] mb-8">
                 Get Legal Consultation
               </h2>
+
+              <StatusMessage />
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -81,10 +186,11 @@ const Contact = () => {
                       required
                       value={formData.name}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        handleInputChange('name', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
                       placeholder="Your full name"
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -96,10 +202,11 @@ const Contact = () => {
                       required
                       value={formData.email}
                       onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
+                        handleInputChange('email', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
                       placeholder="your.email@company.com"
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -113,10 +220,11 @@ const Contact = () => {
                       type="text"
                       value={formData.company}
                       onChange={(e) =>
-                        setFormData({ ...formData, company: e.target.value })
+                        handleInputChange('company', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
                       placeholder="Your company name"
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -127,10 +235,11 @@ const Contact = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
+                        handleInputChange('phone', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
                       placeholder="+234 (0) 123 456 7890"
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -144,25 +253,28 @@ const Contact = () => {
                       required
                       value={formData.service}
                       onChange={(e) =>
-                        setFormData({ ...formData, service: e.target.value })
+                        handleInputChange('service', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
+                      disabled={isSubmitting}
                     >
                       <option value="">Select a service</option>
-                      <option value="technology">
+                      <option value="Technology & Innovation Law">
                         Technology & Innovation Law
                       </option>
-                      <option value="ip">
+                      <option value="Intellectual Property & Data Protection">
                         Intellectual Property & Data Protection
                       </option>
-                      <option value="corporate">
+                      <option value="Corporate & Compliance Services">
                         Corporate & Compliance Services
                       </option>
-                      <option value="adr">ADR & Legal Strategy</option>
-                      <option value="realestate">
+                      <option value="ADR & Legal Strategy">
+                        ADR & Legal Strategy
+                      </option>
+                      <option value="Real Estate & Property Law">
                         Real Estate & Property Law
                       </option>
-                      <option value="general">
+                      <option value="General Legal Consultation">
                         General Legal Consultation
                       </option>
                     </select>
@@ -174,15 +286,22 @@ const Contact = () => {
                     <select
                       value={formData.urgency}
                       onChange={(e) =>
-                        setFormData({ ...formData, urgency: e.target.value })
+                        handleInputChange('urgency', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
+                      disabled={isSubmitting}
                     >
                       <option value="">Select urgency</option>
-                      <option value="low">Low - General inquiry</option>
-                      <option value="medium">Medium - Within 1 week</option>
-                      <option value="high">High - Within 2-3 days</option>
-                      <option value="urgent">
+                      <option value="Low - General inquiry">
+                        Low - General inquiry
+                      </option>
+                      <option value="Medium - Within 1 week">
+                        Medium - Within 1 week
+                      </option>
+                      <option value="High - Within 2-3 days">
+                        High - Within 2-3 days
+                      </option>
+                      <option value="Urgent - Same day response needed">
                         Urgent - Same day response needed
                       </option>
                     </select>
@@ -198,21 +317,36 @@ const Contact = () => {
                     rows={6}
                     value={formData.message}
                     onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
+                      handleInputChange('message', e.target.value)
                     }
                     className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
                     placeholder="Please describe your legal needs, any specific challenges you're facing, and how we can help you..."
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                  whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                   type="submit"
-                  className="w-full bg-[#7F8CAA] text-white py-4 rounded-lg font-bold text-lg hover:bg-[#333446] transition-colors flex items-center justify-center space-x-2"
+                  disabled={isSubmitting}
+                  className={`w-full py-4 rounded-lg font-bold text-lg transition-colors flex items-center justify-center space-x-2 ${
+                    isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-[#7F8CAA] hover:bg-[#333446] text-white'
+                  }`}
                 >
-                  <Send className="w-5 h-5" />
-                  <span>Send Message</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="w-5 h-5 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      <span>Send Message</span>
+                    </>
+                  )}
                 </motion.button>
 
                 <p className="text-sm text-[#7F8CAA] text-center">
@@ -316,9 +450,7 @@ const Contact = () => {
                     <p className="font-bold text-[#B8CFCE]">
                       Emergency Hotline:
                     </p>
-                    <p className="text-xl font-bold">
-                      +234 (0) 911 LEGAL (534254)
-                    </p>
+                    <p className="text-xl font-bold">+234 (0) 813 737 8905</p>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
