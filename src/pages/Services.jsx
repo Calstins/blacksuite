@@ -96,7 +96,7 @@ const Services = () => {
       ],
       caseStudies: [
         'Incorporated 300+ businesses across various sectors',
-        'Achieved 100% compliance rate for regulated clients',
+        'Achieved 100% compliance rate for regulated clients in various jurisdictions.',
         'Facilitated $50M+ in M&A transactions',
       ],
       keyBenefits: [

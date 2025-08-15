@@ -12,6 +12,8 @@ import {
   CheckCircle,
   TrendingUp,
 } from 'lucide-react';
+import main from '../assets/main.png';
+import picx from '../assets/image.jpg';
 
 // Components
 import PageTitleHero from '../components/common/PageTitleHero';
@@ -33,6 +35,120 @@ const About = () => {
         backgroundImage="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
       />
 
+      {/* Meet Our Principal Partner Section */}
+      <section className="py-20 bg-[#EAEFEF]">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-[#333446] mb-6">
+              Meet Our Principal Partner
+            </h2>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="relative"
+            >
+              <img
+                src={main}
+                alt="Olumayowa Osilojo - Principal Partner"
+                className="rounded-2xl shadow-2xl w-full h-[600px] object-cover"
+              />
+              <div className="absolute -bottom-8 -right-8 bg-[#333446] text-white p-6 rounded-xl shadow-xl">
+                <div className="text-3xl font-bold text-[#B8CFCE] mb-2">8+</div>
+                <div className="text-sm font-semibold">Years Experience</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+            >
+              <h3 className="text-3xl font-bold text-[#333446] mb-4">
+                Olumayowa Osilojo – Principal Partner
+              </h3>
+              <p className="text-lg text-[#7F8CAA] mb-6 leading-relaxed">
+                Olumayowa Osilojo is the Principal Partner of Blacksuit
+                Solicitors. With over eight years of legal experience, he has
+                advised clients across industries on corporate transactions,
+                contract negotiations, compliance frameworks, and dispute
+                management.
+              </p>
+              <p className="text-lg text-[#7F8CAA] mb-6 leading-relaxed">
+                Before founding Blacksuit Solicitors, Olumayowa worked with both
+                public and private sector organisations, where he developed a
+                reputation for delivering precise, commercially sensible advice.
+                His background in data governance and regulatory compliance adds
+                a modern edge to his practice, making him a trusted adviser for
+                businesses in today's fast-changing legal environment.
+              </p>
+              <p className="text-lg text-[#7F8CAA] mb-8 leading-relaxed">
+                Olumayowa Osilojo is passionate about helping clients understand
+                the law in practical terms, safeguarding their interests, and
+                positioning them for long-term success.
+              </p>
+
+              {/* Credentials Box */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                className="bg-white p-8 rounded-xl shadow-lg border border-[#B8CFCE]/20"
+              >
+                <h4 className="text-xl font-bold text-[#333446] mb-6 flex items-center">
+                  <Award className="w-6 h-6 mr-2 text-[#7F8CAA]" />
+                  Credentials
+                </h4>
+
+                <div className="mb-6">
+                  <h5 className="text-lg font-semibold text-[#333446] mb-3">
+                    Education
+                  </h5>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#7F8CAA] mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-[#7F8CAA]">
+                        LL.M. in Financial Technology Law - University of East
+                        London
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#7F8CAA] mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-[#7F8CAA]">
+                        Masters of Laws (LL.M.) University of Ibadan, Nigeria
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-[#7F8CAA] mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-[#7F8CAA]">
+                        Bachelor of Laws (LL.B.) - Olabisi Onabanjo University,
+                        Nigeria
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="text-lg font-semibold text-[#333446] mb-3">
+                    Professional Membership
+                  </h5>
+                  <div className="flex items-start">
+                    <CheckCircle className="w-5 h-5 text-[#7F8CAA] mr-2 mt-0.5 flex-shrink-0" />
+                    <span className="text-[#7F8CAA]">
+                      Member, Nigerian Bar Association (NBA)
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Company Overview */}
       <section className="py-20 bg-[#EAEFEF]">
         <div className="container mx-auto px-6">
@@ -45,31 +161,25 @@ const About = () => {
                 Who We Are
               </h2>
               <p className="text-lg text-[#7F8CAA] mb-6 leading-relaxed">
-                At Blacksuit Solicitors, we specialize in helping modern
-                businesses, founders, and institutions stay ahead of legal risks
-                in an increasingly digital, data-driven world. From fintech
-                regulation to real estate structuring, data protection to
-                intellectual property, we offer clear, strategic, and tech-savvy
-                legal support built around your growth.
+                At Blacksuit Solicitors, we believe legal services should be
+                clear, practical, and tailored to our clients’ real-world needs.
+                As a boutique law firm, we offer personalised attention, deep
+                legal expertise, and the flexibility to respond quickly to each
+                client’s unique situation.
               </p>
               <p className="text-lg text-[#7F8CAA] mb-6 leading-relaxed">
-                Our team combines deep legal expertise with cutting-edge
-                industry knowledge to provide comprehensive solutions that
-                protect your interests while enabling innovation and growth. We
-                understand the unique challenges facing businesses in Nigeria's
-                dynamic economy.
-              </p>
-              <p className="text-lg text-[#7F8CAA] mb-8 leading-relaxed">
-                Founded on principles of excellence, integrity, and innovation,
-                we have grown to become one of Nigeria's most trusted legal
-                partners for technology-driven businesses and forward-thinking
-                organizations.
+                Our practice focuses on corporate law, contract drafting and
+                review, regulatory compliance, dispute resolution, and data
+                protection. Whether you are an entrepreneur launching a new
+                venture, an established business navigating legal obligations,
+                or an individual seeking guidance, we are committed to providing
+                solutions that protect your interests and support your goals.
               </p>
 
               <div className="grid grid-cols-2 gap-6 mb-8">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-[#7F8CAA] mb-2">
-                    15+
+                    10+
                   </div>
                   <div className="text-[#333446] font-semibold">
                     Years Experience
@@ -102,7 +212,7 @@ const About = () => {
               className="relative"
             >
               <img
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                src={picx}
                 alt="Professional legal team"
                 className="rounded-2xl shadow-2xl"
               />

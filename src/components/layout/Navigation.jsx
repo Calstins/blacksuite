@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Scale } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -20,7 +32,9 @@ const Navigation = () => {
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed top-0 left-0 right-0 z-40 bg-transparent backdrop-blur-md border-b border-white/10"
+      className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md border-b border-white/10 transition-all duration-300 ${
+        isScrolled ? 'bg-black/50' : 'bg-transparent'
+      }`}
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
@@ -28,14 +42,15 @@ const Navigation = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-3"
           >
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-[#B8CFCE] rounded-lg flex items-center justify-center">
-                <Scale className="w-7 h-7 text-[#333446]" />
-              </div>
+            <Link to="/" className="flex items-center">
+              <img src={logo} className="w-12 h-12" />
+
               <div>
-                <h1 className="text-2xl font-bold text-white">Blacksuit</h1>
-                <p className="text-xs text-[#B8CFCE] tracking-wider">
-                  SOLICITORS
+                <h1 className="text-2xl font-extrabold text-white capitalize">
+                  BLACKSUIT
+                </h1>
+                <p className="text-sm text-[#B8CFCE] tracking-wider">
+                  Solicitors
                 </p>
               </div>
             </Link>

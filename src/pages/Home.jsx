@@ -85,7 +85,7 @@ const Home = () => {
       exit={{ opacity: 0 }}
     >
       {/* Hero Section */}
-      <section className="relative h-screen overflow-hidden">
+      <section className="relative h-screen overflow-hidden bg-[#333446]">
         <AnimatePresence
           mode="wait"
           onExitComplete={() => setIsTransitioning(false)}
@@ -97,10 +97,10 @@ const Home = () => {
             animate="center"
             exit="exit"
             transition={{ duration: 1, ease: 'easeInOut' }}
-            className="absolute inset-0 z-0"
+            className="absolute inset-0 z-0 bg-[#333446]"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
+              className="absolute inset-0 bg-cover bg-center bg-[#333446]"
               style={{ backgroundImage: `url(${slides[currentSlide].image})` }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50" />
@@ -117,7 +117,7 @@ const Home = () => {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -50 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
                   className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight"
                 >
                   {slides[currentSlide].title}
@@ -131,7 +131,7 @@ const Home = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
                   className="text-lg md:text-xl text-[#EAEFEF] mb-6 max-w-2xl leading-relaxed"
                 >
                   {slides[currentSlide].subtitle}
@@ -145,16 +145,16 @@ const Home = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.5, delay: 0.9 }}
                   className="border-l-4 border-[#B8CFCE] pl-6 sm:pl-8 mb-10 max-w-3xl"
                 >
-                  <Quote className="w-6 h-6 text-[#B8CFCE] mb-3" />
+                  {/* <Quote className="w-6 h-6 text-[#B8CFCE] mb-3" />
                   <blockquote className="text-base md:text-lg italic text-[#B8CFCE] mb-2 leading-relaxed">
                     "{slides[currentSlide].quote}"
                   </blockquote>
                   <cite className="text-[#7F8CAA] font-semibold text-sm md:text-base">
                     — {slides[currentSlide].author}
-                  </cite>
+                  </cite> */}
                 </motion.div>
               </AnimatePresence>
 
@@ -162,7 +162,7 @@ const Home = () => {
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 1.1, duration: 0.5 }}
                 className="flex flex-col sm:flex-row gap-4 sm:gap-6"
               >
                 <Link to="/contact">
@@ -171,7 +171,7 @@ const Home = () => {
                     whileTap={{ scale: 0.95 }}
                     className="bg-[#7F8CAA] text-white px-6 py-3 sm:px-10 sm:py-5 rounded-lg font-bold text-base sm:text-lg flex items-center justify-center space-x-2"
                   >
-                    <span>Get Legal Consultation</span>
+                    <span>Get consultation</span>
                     <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
                   </motion.button>
                 </Link>
@@ -286,8 +286,8 @@ const Home = () => {
               <p className="text-lg leading-relaxed text-[#EAEFEF]">
                 To be Africa's trusted legal partner for technology-driven
                 businesses shaping the future of law through innovation, ethical
-                counsel, and a deep understanding of data, compliance, and
-                impact.
+                counsel, expertise in data compliance and transformative legal
+                strategy.
               </p>
             </motion.div>
           </div>
@@ -345,7 +345,7 @@ const Home = () => {
               >
                 <Link to="/services">
                   <div
-                    className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}
+                    className={`w-16 h-16 bg-[#333446] rounded-xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}
                   >
                     {service.icon}
                   </div>

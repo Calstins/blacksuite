@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
 import LoadingScreen from './components/common/LoadingScreen';
+import WhatsAppChat from './components/WhatsAppChat';
 
 // Pages
 import Home from './pages/Home';
@@ -39,7 +40,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </AnimatePresence>
-
+        <WhatsAppChat />
         <Footer />
       </div>
     </Router>

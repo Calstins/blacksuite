@@ -13,6 +13,7 @@ import {
   MapPin,
   Clock,
 } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -63,19 +64,22 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid lg:grid-cols-6 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-[#B8CFCE] rounded-lg flex items-center justify-center">
-                <Scale className="w-7 h-7 text-[#333446]" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold">Blacksuit Solicitors</h3>
-                <p className="text-sm text-[#B8CFCE] tracking-wider">
-                  LEGAL EXCELLENCE
-                </p>
-              </div>
+              <Link to="/" className="flex items-center">
+                <img src={logo} className="w-12 h-12" />
+
+                <div>
+                  <h1 className="text-2xl font-extrabold text-white capitalize">
+                    BLACKSUIT
+                  </h1>
+                  <p className="text-sm text-[#B8CFCE] tracking-wider">
+                    Solicitors
+                  </p>
+                </div>
+              </Link>
             </div>
             <p className="text-[#B8CFCE] mb-6 leading-relaxed">
               Leading legal innovation in Africa with specialized solutions for
@@ -104,12 +108,100 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Services */}
+          <div className="lg:col-span-2">
+            <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">Expertise</h4>
+            <ul className="space-y-2 text-[#B8CFCE]">
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Business and Corporate Advisory
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Company Secretarial Services
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Media & Technology Law
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Intellectual Property and Data Protection Law
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Real Estate Law
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Fintech and Regulatory compliance law
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Alternative Dispute Resolution Law
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Family Law.
+                </motion.a>
+              </li>
+              <li>
+                <motion.a
+                  whileHover={{ x: 5 }}
+                  href="#"
+                  className="hover:text-white transition-colors"
+                >
+                  Pro bono Legal Services
+                </motion.a>
+              </li>
+            </ul>
+          </div>
+
           {/* Quick Links */}
           <div>
             <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">
               Quick Links
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {[
                 { name: 'Home', path: '/' },
                 { name: 'About Us', path: '/about' },
@@ -130,60 +222,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Services */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">
-              Legal Services
-            </h4>
-            <ul className="space-y-3 text-[#B8CFCE]">
-              <li>
-                <motion.a
-                  whileHover={{ x: 5 }}
-                  href="#"
-                  className="hover:text-white transition-colors"
-                >
-                  Technology Law
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  whileHover={{ x: 5 }}
-                  href="#"
-                  className="hover:text-white transition-colors"
-                >
-                  IP & Data Protection
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  whileHover={{ x: 5 }}
-                  href="#"
-                  className="hover:text-white transition-colors"
-                >
-                  Corporate Services
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  whileHover={{ x: 5 }}
-                  href="#"
-                  className="hover:text-white transition-colors"
-                >
-                  Real Estate Law
-                </motion.a>
-              </li>
-              <li>
-                <motion.a
-                  whileHover={{ x: 5 }}
-                  href="#"
-                  className="hover:text-white transition-colors"
-                >
-                  ADR Services
-                </motion.a>
-              </li>
-            </ul>
-          </div>
-
           {/* Contact Info */}
           <div>
             <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">
@@ -193,9 +231,8 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-[#B8CFCE] mt-1" />
                 <div className="text-[#B8CFCE]">
-                  <p>123 Legal Avenue</p>
-                  <p>Victoria Island, Lagos</p>
-                  <p>Nigeria</p>
+                  <p>Mainland, Lagos </p>
+                  <p>(By appointment only)</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

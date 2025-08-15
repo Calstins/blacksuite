@@ -15,7 +15,7 @@ const StatsSection = () => {
       icon: <TrendingUp className="w-8 h-8" />,
     },
     {
-      number: '15+',
+      number: '10+',
       label: 'Years Experience',
       icon: <Award className="w-8 h-8" />,
     },

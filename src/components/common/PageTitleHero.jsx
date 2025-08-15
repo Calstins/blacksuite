@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
 
 const PageTitleHero = ({ title, subtitle, quote, author, backgroundImage }) => (
-  <section className="relative h-96 overflow-hidden">
+  <section className="relative h-96 overflow-hidden -mt-20">
+    <div className="h-20"></div>
     <div
       className="absolute inset-0 bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -11,7 +12,7 @@ const PageTitleHero = ({ title, subtitle, quote, author, backgroundImage }) => (
     <div className="absolute inset-0 bg-gradient-to-r from-[#333446]/90 to-[#333446]/70" />
 
     <div className="relative z-10 h-full flex items-center">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
