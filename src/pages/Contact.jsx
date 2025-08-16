@@ -683,10 +683,10 @@ const Contact = () => {
               <div className="bg-[#EAEFEF] p-6 rounded-lg">
                 <h4 className="font-bold text-[#333446] mb-3">Getting Here</h4>
                 <ul className="space-y-2 text-[#7F8CAA] text-sm">
-                  <li>• Easily accessible from Victoria Island</li>
-                  <li>• 15 minutes from Lagos Mainland</li>
-                  <li>• Accessible via public transport</li>
-                  <li>• Near Alapere Bus Stop</li>
+                  <li>• 10 minutes from the Ikeja High Court </li>
+                  <li>• 15 minutes from Lagos Island</li>
+                  <li>• Accessible via public transport </li>
+                  <li>• Near banks and corporate offices</li>
                 </ul>
               </div>
             </motion.div>
