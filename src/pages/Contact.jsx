@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import {
@@ -31,11 +31,134 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
 
-  // EmailJS configuration - Replace with your actual values
-  const EMAILJS_SERVICE_ID = 'your_service_id';
-  const EMAILJS_TEMPLATE_ID = 'your_template_id';
-  const EMAILJS_PUBLIC_KEY = 'your_public_key';
+  // Office coordinates for 24, Alhaji Owoade Street, Alapere Estate, Lagos
+  const officeCoordinates = [6.5568, 3.3792]; // [latitude, longitude]
+
+  // EmailJS configuration using environment variables
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  // Load Leaflet map
+  useEffect(() => {
+    const loadLeaflet = async () => {
+      try {
+        // Dynamically import Leaflet
+        const L = await import('leaflet');
+
+        // Import Leaflet CSS
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+
+        // Wait for CSS to load
+        await new Promise((resolve) => {
+          link.onload = resolve;
+        });
+
+        if (mapRef.current && !mapInstanceRef.current) {
+          // Initialize map
+          const map = L.default.map(mapRef.current, {
+            center: officeCoordinates,
+            zoom: 16,
+            zoomControl: true,
+            scrollWheelZoom: false,
+          });
+
+          // Add OpenStreetMap tiles
+          L.default
+            .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution:
+                '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+              maxZoom: 19,
+            })
+            .addTo(map);
+
+          // Custom marker icon
+          const customIcon = L.default.divIcon({
+            html: `
+              <div style="
+                background: linear-gradient(135deg, #333446 0%, #7F8CAA 100%);
+                width: 40px;
+                height: 40px;
+                border-radius: 50% 50% 50% 0;
+                transform: rotate(-45deg);
+                border: 3px solid white;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              ">
+                <div style="
+                  color: white;
+                  font-size: 16px;
+                  transform: rotate(45deg);
+                  font-weight: bold;
+                ">⚖️</div>
+              </div>
+            `,
+            className: 'custom-marker',
+            iconSize: [40, 40],
+            iconAnchor: [20, 35],
+            popupAnchor: [0, -35],
+          });
+
+          // Add marker with popup
+          const marker = L.default
+            .marker(officeCoordinates, {
+              icon: customIcon,
+            })
+            .addTo(map);
+
+          marker.bindPopup(`
+            <div style="text-align: center; font-family: system-ui, sans-serif;">
+              <h3 style="margin: 0 0 8px 0; color: #333446; font-size: 16px;">
+                <strong>Blacksuit Solicitors</strong>
+              </h3>
+              <p style="margin: 0 0 8px 0; color: #7F8CAA; font-size: 14px;">
+                24, Alhaji Owoade Street<br>
+                Alapere Estate, Lagos
+              </p>
+              <p style="margin: 0; color: #7F8CAA; font-size: 12px;">
+                📞 +234 (0) 813 737 8905
+              </p>
+            </div>
+          `);
+
+          // Store map instance
+          mapInstanceRef.current = map;
+          setMapLoaded(true);
+
+          // Add resize handler
+          const resizeObserver = new ResizeObserver(() => {
+            map.invalidateSize();
+          });
+          resizeObserver.observe(mapRef.current);
+
+          return () => {
+            resizeObserver.disconnect();
+          };
+        }
+      } catch (error) {
+        console.error('Failed to load Leaflet map:', error);
+      }
+    };
+
+    loadLeaflet();
+
+    // Cleanup
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,25 +166,26 @@ const Contact = () => {
     setSubmitStatus(null);
 
     try {
-      // Prepare template parameters
+      // Prepare template parameters with consistent naming
       const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        company: formData.company || 'Not specified',
-        phone: formData.phone || 'Not provided',
-        service: formData.service,
-        urgency: formData.urgency || 'Not specified',
-        message: formData.message,
-        to_name: 'BlackSuit Solicitors Team',
-        reply_to: formData.email,
-        submission_date: new Date().toLocaleDateString('en-US', {
+        client_name: formData.name,
+        client_email: formData.email,
+        client_company: formData.company || 'Not specified',
+        client_phone: formData.phone || 'Not provided',
+        service_requested: formData.service,
+        urgency_level: formData.urgency || 'Not specified',
+        client_message: formData.message,
+        submission_date: new Date().toLocaleString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'Africa/Lagos',
         }),
       };
+
+      console.log('Sending email with params:', templateParams);
 
       // Send email using EmailJS
       const result = await emailjs.send(
@@ -104,6 +228,11 @@ const Contact = () => {
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+  };
+
+  const openInMaps = () => {
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${officeCoordinates[0]},${officeCoordinates[1]}`;
+    window.open(googleMapsUrl, '_blank');
   };
 
   // Status message component
@@ -154,7 +283,6 @@ const Contact = () => {
       <PageTitleHero
         title="Contact Us"
         subtitle="Ready to discuss your legal needs? Get in touch with our expert team today"
-        quote="The first duty of society is justice"
         author="Alexander Hamilton"
         backgroundImage="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
       />
@@ -238,7 +366,7 @@ const Contact = () => {
                         handleInputChange('phone', e.target.value)
                       }
                       className="w-full px-4 py-3 border-2 border-[#B8CFCE]/30 rounded-lg focus:border-[#7F8CAA] focus:outline-none transition-colors"
-                      placeholder="+234 (0) 123 456 7890"
+                      placeholder="+234 (0) 813 737 8905"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -379,7 +507,7 @@ const Contact = () => {
                   {
                     icon: <Phone className="w-8 h-8" />,
                     title: 'Call Us',
-                    primary: '+234 (0) 123 456 7890',
+                    primary: '+234 (0) 813 737 8905',
                     secondary: '24/7 Emergency Legal Hotline',
                     color: 'from-blue-500 to-purple-600',
                   },
@@ -391,17 +519,10 @@ const Contact = () => {
                     color: 'from-green-500 to-teal-600',
                   },
                   {
-                    icon: <MapPin className="w-8 h-8" />,
-                    title: 'Visit Our Office',
-                    primary: '123 Legal Avenue, Victoria Island',
-                    secondary: 'Lagos, Nigeria',
-                    color: 'from-orange-500 to-red-600',
-                  },
-                  {
                     icon: <Clock className="w-8 h-8" />,
                     title: 'Office Hours',
                     primary: 'Monday - Friday: 8:00 AM - 6:00 PM',
-                    secondary: 'Saturday: 9:00 AM - 2:00 PM',
+                    secondary: 'Saturday: 8:00 AM - 6:00 PM',
                     color: 'from-purple-500 to-pink-600',
                   },
                 ].map((contact, index) => (
@@ -415,7 +536,7 @@ const Contact = () => {
                   >
                     <div className="flex items-start space-x-4">
                       <div
-                        className={`w-14 h-14 bg-gradient-to-r ${contact.color} rounded-lg flex items-center justify-center text-white`}
+                        className={`w-14 h-14 bg-[#333446] rounded-lg flex items-center justify-center text-white`}
                       >
                         {contact.icon}
                       </div>
@@ -452,13 +573,16 @@ const Contact = () => {
                     </p>
                     <p className="text-xl font-bold">+234 (0) 813 737 8905</p>
                   </div>
-                  <motion.button
+                  <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-[#B8CFCE] text-[#333446] px-6 py-3 rounded-lg font-bold hover:bg-white transition-colors"
+                    href="tel:+2348137378905"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Call Now
-                  </motion.button>
+                  </motion.a>
                 </div>
               </div>
 
@@ -514,7 +638,7 @@ const Contact = () => {
               Our Location
             </h2>
             <p className="text-xl text-[#7F8CAA] max-w-3xl mx-auto">
-              Conveniently located in the heart of Lagos business district
+              Conveniently located in Alapere Estate, Lagos
             </p>
           </motion.div>
 
@@ -532,9 +656,10 @@ const Contact = () => {
                   <div>
                     <p className="font-semibold text-[#333446]">Address:</p>
                     <p className="text-[#7F8CAA]">
-                      123 Legal Avenue, Victoria Island
+                      24, Alhaji Owoade Street,
+                      <br /> Alapere Estate, Lagos.
                       <br />
-                      Lagos State, Nigeria
+                      (By appointment only)
                     </p>
                   </div>
                 </div>
@@ -553,26 +678,15 @@ const Contact = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3">
-                  <Car className="w-6 h-6 text-[#7F8CAA] mt-1" />
-                  <div>
-                    <p className="font-semibold text-[#333446]">Parking:</p>
-                    <p className="text-[#7F8CAA]">
-                      Free client parking available
-                      <br />
-                      Valet service upon request
-                    </p>
-                  </div>
-                </div>
               </div>
 
               <div className="bg-[#EAEFEF] p-6 rounded-lg">
                 <h4 className="font-bold text-[#333446] mb-3">Getting Here</h4>
                 <ul className="space-y-2 text-[#7F8CAA] text-sm">
-                  <li>• 5 minutes from Tafawa Balewa Square</li>
-                  <li>• 10 minutes from Lagos Island</li>
+                  <li>• Easily accessible from Victoria Island</li>
+                  <li>• 15 minutes from Lagos Mainland</li>
                   <li>• Accessible via public transport</li>
-                  <li>• Near major banks and corporate offices</li>
+                  <li>• Near Alapere Bus Stop</li>
                 </ul>
               </div>
             </motion.div>
@@ -580,26 +694,35 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-[#EAEFEF] p-8 rounded-2xl"
+              className="bg-[#EAEFEF] p-4 rounded-2xl"
             >
-              <div className="aspect-video bg-[#7F8CAA]/20 rounded-lg flex items-center justify-center mb-6">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 text-[#7F8CAA] mx-auto mb-4" />
-                  <p className="text-[#7F8CAA] font-semibold">
-                    Interactive Map
-                  </p>
-                  <p className="text-[#7F8CAA] text-sm">
-                    Click to view on Google Maps
-                  </p>
-                </div>
+              {/* Interactive Leaflet Map */}
+              <div className="relative">
+                <div
+                  ref={mapRef}
+                  className="w-full h-96 rounded-lg border-2 border-[#B8CFCE]/20 bg-[#7F8CAA]/10"
+                  style={{ minHeight: '384px' }}
+                />
+                {!mapLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#7F8CAA]/10 rounded-lg">
+                    <div className="text-center">
+                      <Loader className="w-8 h-8 text-[#7F8CAA] mx-auto mb-2 animate-spin" />
+                      <p className="text-[#7F8CAA] font-semibold">
+                        Loading Map...
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-[#7F8CAA] text-white py-3 rounded-lg font-semibold hover:bg-[#333446] transition-colors flex items-center justify-center space-x-2"
+                onClick={openInMaps}
+                className="w-full mt-4 bg-[#7F8CAA] text-white py-3 rounded-lg font-semibold hover:bg-[#333446] transition-colors flex items-center justify-center space-x-2"
               >
                 <ExternalLink className="w-5 h-5" />
-                <span>Open in Maps</span>
+                <span>Open in Google Maps</span>
               </motion.button>
             </motion.div>
           </div>

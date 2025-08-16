@@ -42,13 +42,13 @@ const PageTitleHero = ({ title, subtitle, quote, author, backgroundImage }) => (
               transition={{ delay: 0.6 }}
               className="border-l-4 border-[#B8CFCE] pl-6"
             >
-              <Quote className="w-8 h-8 text-[#B8CFCE] mb-2" />
+              {/* <Quote className="w-8 h-8 text-[#B8CFCE] mb-2" />
               <blockquote className="text-lg italic text-[#B8CFCE] mb-2">
                 "{quote}"
               </blockquote>
               {author && (
                 <cite className="text-[#7F8CAA] font-semibold">— {author}</cite>
-              )}
+              )} */}
             </motion.div>
           )}
         </motion.div>

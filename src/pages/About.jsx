@@ -30,7 +30,7 @@ const About = () => {
       <PageTitleHero
         title="About Blacksuit Solicitors"
         subtitle="Leading legal innovation in Africa with specialized solutions for modern businesses"
-        quote="Justice delayed is justice denied"
+        // quote="Justice delayed is justice denied"
         author="William E. Gladstone"
         backgroundImage="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
       />

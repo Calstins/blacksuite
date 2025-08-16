@@ -64,9 +64,9 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-6 gap-8">
+        <div className="grid lg:grid-cols-10 gap-8">
           {/* Company Info */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <div className="flex items-center space-x-3 mb-6">
               <Link to="/" className="flex items-center">
                 <img src={logo} className="w-12 h-12" />
@@ -109,7 +109,7 @@ const Footer = () => {
           </div>
 
           {/* Services */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">Expertise</h4>
             <ul className="space-y-2 text-[#B8CFCE]">
               <li>
@@ -197,7 +197,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">
               Quick Links
             </h4>
@@ -223,7 +223,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="text-lg font-bold mb-6 text-[#EAEFEF]">
               Contact Info
             </h4>
@@ -231,7 +231,8 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-[#B8CFCE] mt-1" />
                 <div className="text-[#B8CFCE]">
-                  <p>Mainland, Lagos </p>
+                  <p>24, Alhaji Owoade stress, </p>
+                  <p> Alapere Estate, Lagos. </p>
                   <p>(By appointment only)</p>
                 </div>
               </div>
@@ -247,7 +248,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="w-5 h-5 text-[#B8CFCE]" />
-                <span className="text-[#B8CFCE]">Mon-Fri: 8AM-6PM</span>
+                <span className="text-[#B8CFCE]">Mon-Sat: 8AM-6PM</span>
               </div>
             </div>
           </div>

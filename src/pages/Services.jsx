@@ -174,7 +174,7 @@ const Services = () => {
       <PageTitleHero
         title="Our Legal Services"
         subtitle="Comprehensive legal solutions tailored for modern businesses and technology-driven organizations"
-        quote="The law is reason, free from passion"
+        // quote="The law is reason, free from passion"
         author="Aristotle"
         backgroundImage="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
       />
