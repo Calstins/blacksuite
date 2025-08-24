@@ -60,7 +60,9 @@ const About = () => {
                 className="rounded-2xl shadow-2xl w-full h-[600px] object-cover"
               />
               <div className="absolute -bottom-8 -right-8 bg-[#333446] text-white p-6 rounded-xl shadow-xl">
-                <div className="text-3xl font-bold text-[#B8CFCE] mb-2">8+</div>
+                <div className="text-3xl font-bold text-[#B8CFCE] mb-2">
+                  10+
+                </div>
                 <div className="text-sm font-semibold">Years Experience</div>
               </div>
             </motion.div>
@@ -113,7 +115,7 @@ const About = () => {
                       <CheckCircle className="w-5 h-5 text-[#7F8CAA] mr-2 mt-0.5 flex-shrink-0" />
                       <span className="text-[#7F8CAA]">
                         LL.M. in Financial Technology Law - University of East
-                        London
+                        London, United Kingdom
                       </span>
                     </li>
                     <li className="flex items-start">

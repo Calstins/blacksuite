@@ -672,7 +672,7 @@ const Contact = () => {
                     <p className="text-[#7F8CAA]">
                       Monday - Friday: 8:00 AM - 6:00 PM
                       <br />
-                      Saturday: 9:00 AM - 2:00 PM
+                      Saturday: 8:00 AM - 6:00 PM
                       <br />
                       Sunday: Emergency Only
                     </p>

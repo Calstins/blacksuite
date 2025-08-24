@@ -231,7 +231,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-[#B8CFCE] mt-1" />
                 <div className="text-[#B8CFCE]">
-                  <p>24, Alhaji Owoade stress, </p>
+                  <p>24, Alhaji Owoade street, </p>
                   <p> Alapere Estate, Lagos. </p>
                   <p>(By appointment only)</p>
                 </div>
